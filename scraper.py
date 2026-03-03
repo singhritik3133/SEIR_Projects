@@ -6,46 +6,52 @@
 
 import sys as system
 import requests
-import requestsfimport bs4 import BeautifulSoup
+import requests from bs4 import BeautifulSoup
 
 def fetch_Page(url):
-  r=requests.get(url)
-  if r.status_code!=200:
-    print("Page Not Opened")
-    system.exit()
-
-  return r.text
+  try:
+    r=requests.get(url,timeout=10)
+    if r.status_code!=200:
+      print("Page Not Opened")
+      system.exit(1)
+      return r.text
+  except:
+    print("Invalid URL or Network Error")
+    system.exit(1)
 
 def get_title(soup):
   if soup.title:
-    return soup.title.text.strip()
+    return soup.title.text.strip(strip=True)
   else:
     return "Don't get Title"
 
 def get_body(soup):
   if soup.body:
-    text=soup.body.get_text()
+    text=soup.body.get_text(seperator="\n",strip=True)
     return text
   else:
     return " "
 
 def get_links(soup):
-  link_list=[]
+  link_List=[]
   tags=soup.find_all("a")
 
   for t in tags:
     h=t.get("href")
     if h!=None:
       link_List.append(h)
-  return link_list
+  return link_List
 
 
 def main():
   if len(system.argv)<2:
     print("pass URL on commond line")
-    system.exit()
+    system.exit(1)
   url=system.argv[1]
-  html=fetch_page(url)
+  if not url.startswith("http://") and not url.startswith("https://"):
+        url = "https://" + url
+  
+  html=fetch_Page(url)
   soup=BeautifulSoup(html,"html.parser")
 
   title=get_title(soup)
@@ -58,4 +64,5 @@ def main():
   for l in links:
     print(l)
 
-main()
+if __name__=="__main__":
+  main()
