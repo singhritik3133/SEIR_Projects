@@ -14,7 +14,7 @@ def fetch_page(url):
     if r.status_code!=200:
       print("Page Not Opened")
       system.exit(1)
-      return r.text
+    return r.text
   except:
     print("Invalid URL or Network Error")
     system.exit(1)
