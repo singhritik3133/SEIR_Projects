@@ -5,10 +5,10 @@
 # All the URLs that the page points/links to
 
 import sys as system
-import requests
-import requests from bs4 import BeautifulSoup
+import requests 
+from bs4 import BeautifulSoup
 
-def fetch_Page(url):
+def fetch_page(url):
   try:
     r=requests.get(url,timeout=10)
     if r.status_code!=200:
@@ -21,13 +21,13 @@ def fetch_Page(url):
 
 def get_title(soup):
   if soup.title:
-    return soup.title.text.strip(strip=True)
+    return soup.title.get_text(strip=True)
   else:
     return "Don't get Title"
 
 def get_body(soup):
   if soup.body:
-    text=soup.body.get_text(seperator="\n",strip=True)
+    text=soup.body.get_text(separator="\n",strip=True)
     return text
   else:
     return " "
@@ -51,7 +51,7 @@ def main():
   if not url.startswith("http://") and not url.startswith("https://"):
         url = "https://" + url
   
-  html=fetch_Page(url)
+  html=fetch_page(url)
   soup=BeautifulSoup(html,"html.parser")
 
   title=get_title(soup)
